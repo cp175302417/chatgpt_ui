@@ -29,6 +29,11 @@ const ConversationPage = () => {
   }, [apiKey])
 
   useEffect(() => {
+    console.log("change index:" + currentDiaIndex)
+    handleIndexChange(currentDiaIndex)
+  }, [currentDiaIndex])
+
+  useEffect(() => {
     // Update the document title using the browser API
     if(dialist == null){ //启动
       console.log("init")
@@ -50,7 +55,7 @@ const ConversationPage = () => {
         let ci = parseInt(_currentDiaIndex)
         if(ci > -1 && ci < _dialist.length){
           SetCurrentDiaIndex(ci)
-          handleIndexChange(ci)
+          //handleIndexChange(ci)
         }
       }
     }
@@ -73,6 +78,7 @@ const ConversationPage = () => {
     if(_messages == null){
       console.log("load messages: null")
       _messages = []
+      setMessages(_messages)
     }
     else{
       console.log("load messages:" + _messages)
