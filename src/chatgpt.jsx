@@ -8,7 +8,7 @@ const ConversationPage = () => {
 
   const [inputValue, setInputValue] = useState("");
   const [sending, setSending] = useState(false);
-  const [messages, setMessages] = useState([{role: "system", content: "你是一个万能助手。"}]);
+  const [messages, setMessages] = useState([{role: "user", content: "你是一个万能助手。\n我遥的"}]);
 
   const diabox = useRef(null);
 
@@ -92,8 +92,12 @@ const ConversationPage = () => {
 
   const handleSendClick = () => {
     // 构造要发送的数据
-    inputValue.replace("\n", "\n\n")
-    let message = {"role": "user", "content": inputValue}
+    console.log("inputValue :" + inputValue)
+    //let _inputValue = inputValue
+    //let _inputValue = inputValue.replace("\n", "  \n")
+    let _inputValue = inputValue.replace(/\n/g, "  \n")
+    console.log("inputValue :" + _inputValue)
+    let message = {"role": "user", "content": _inputValue}
     let _messages = [...messages, message]
     setMessages(_messages)
     const data = {
@@ -138,6 +142,7 @@ const ConversationPage = () => {
     SetDialist(_dialist)
     SetCurrentDiaIndex(_dialist.length - 1)
     localStorage.setItem("dialist", JSON.stringify(_dialist))
+    localStorage.setItem("messages_" + (_dialist.length - 1), JSON.stringify([]));
     handleIndexChange(_dialist.length - 1)
   }
 
@@ -179,7 +184,10 @@ const ConversationPage = () => {
   let lc = {width: "200px", height: "100%", borderRight: "1px solid black", backgroundColor: "#000000", display: "flex", flexDirection: "column"}
 
   let fs = {height: "100%", display: "flex", flexDirection: "column", flex:1}
-  let foot = {float: "bottom", height:"50px"}
+
+  //foot 控件大小不变居中
+  let foot = {display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", height: "40px"}
+
   let dia = {flex : 1, overflow: "hidden", overflowY: "scroll", height: "100%"}
   let leftdia = {textAlign: "left", minWidth:"100px", margin: "2px"}
   let rightdia = {textAlign: "left", minWidth:"100px", backgroundColor: "#f0f0f0", margin: "2px"}
@@ -210,19 +218,19 @@ const ConversationPage = () => {
             }
             else if(message.role === "user"){
               return <div style={leftdia} key={index} >
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+                        <ReactMarkdown >{message.content}</ReactMarkdown>
                       </div>
             }
             else
               return <div style={rightdia} key={index}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+                        <ReactMarkdown >{message.content}</ReactMarkdown>
                       </div>
           })}
         </div>
         <div style={foot}>
-          <input value={inputValue} style={{width:'400px'}}onChange={handleInputChange} />
-          {/*<textarea value={inputValue} onChange={handleInputChange} />*/}
-          <button onClick={handleSendClick} disabled={sending}>Send</button>
+          { /*<input value={inputValue} style={{width:'400px'}}onChange={handleInputChange} /> */}
+          <textarea value={inputValue} style={{width:'400px', resize:'none'}} onChange={handleInputChange} />
+          <button style={{height:'80%', }} onClick={handleSendClick} disabled={sending}>Send</button>
         </div>
       </div>
     </div>
